@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'dart:uft8';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,28 +15,28 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text("List View使用"),
-          centerTitle: false,
+          title: Text('listView的使用'),
+          centerTitle: true,
         ),
         body: CustomListView(),
-      ),
+      )
     );
   }
 }
 
 class CustomListView extends StatelessWidget {
+
   var httpClient = new HttpClient();
-  var url = "https://randomuser.me/api/?results=30";
-  _loadDate() async {
-    var request = await httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    // if (response.statusCode == HttpStatus.OK) {
-      var json = await response.transform(utf8.decoder).join();
-    //   var data = jsonDecode(json);
-    //   result = data['origin'];
-    // } else {
-    //   result = 'Error getting IP address:\nHttp status ${response.statusCode}';
-    // }
+  var url = 'https://randomuser.me/api/?results=30';
+
+  _loadData() async {
+
+    var resquest = await httpClient.getUrl(Uri.parse(url));
+    var response = await resquest.close();
+    var result = await response.transform(utf8.decoder).join();
+
+    print(result);
+
   }
 
   @override
@@ -43,55 +45,69 @@ class CustomListView extends StatelessWidget {
       child: getListView3(),
     );
   }
-  //方式一
-  // 数据量小 相对固定
-  // getListView1(){
-  //   return new ListView(
-  //     padding: EdgeInsets.all(10),
-  //     children: <Widget>[
-  //       Text("Row1"),
-  //       Text("Row2"),
-  //       Text("Row3"),
-  //       Text("Row1"),
-  //       Text("Row2"),
-  //       Text("Row3"),
-  //       Text("Row1"),
-  //       Text("Row2"),
-  //       Text("Row3"),
-  //     ],
-  //   );
 
-  // }
-  //方式二
+  //方式一：
+  //适用于数据量小切相对固定的数据
+  getListView1() {
+    return new ListView(
+      padding: EdgeInsets.all(10),
+      children: <Widget>[
+        Text('Row1'),
+        Text('Row2'),
+        Text('Row3'),
+        Text('Row1'),
+        Text('Row2'),
+        Text('Row3'),
+        Text('Row1'),
+        Text('Row2'),
+        Text('Row3'),
+      ],
+    );
+  }
+
   getListView2() {
     return new ListView.builder(
       padding: EdgeInsets.all(10),
       itemCount: 20,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (BuildContext context, int index){
         // return Text('$index');
+
         return ListTile(
-            title: Text('title$index'), subtitle: Text('subTitle$index'));
+          title: Text('title$index'),
+          subtitle: Text('subTitle$index'),
+          // leading: ,
+        );
       },
     );
   }
 
-  //方式三
   getListView3() {
+    
+    _loadData();
+    
     return new ListView.separated(
       padding: EdgeInsets.all(10),
       itemCount: 20,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (BuildContext context, int index){
         // return Text('$index');
+
         return ListTile(
-            title: Text('title$index'), subtitle: Text('subTitle$index'));
+          title: Text('title$index'),
+          subtitle: Text('subTitle$index'),
+          // leading: ,
+        );
       },
-      separatorBuilder: (BuildContext context, int index) {
-        // return Text('$index');
+      separatorBuilder: (BuildContext context, int index){
         return Divider(
-          height: 1,
+          height: 0.5,
           color: Colors.grey,
         );
       },
     );
   }
+
+  //网络加载
+
+  
+
 }
